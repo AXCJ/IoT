@@ -21,7 +21,7 @@ import config_ServerIPList
 
 _g_cst_ToMQTTTopicServerIP = config_ServerIPList._g_cst_ToMQTTTopicServerIP
 _g_cst_ToMQTTTopicServerPort = config_ServerIPList._g_cst_ToMQTTTopicServerPort
-_g_cst_IoTServerUUID = "IOTSV"
+_g_cst_IoTServerUUID = "IOTSV-123"
 
 _globalNodeList = []
 _globalFSList = []
@@ -58,6 +58,8 @@ tasks = [
     }
 ]
 
+_gg = 0
+
 @app.route('/nit/iotsv/api/nodes', methods=['GET'])
 def get_tasks():
     return jsonify({'tasks': _globalNodeList})
@@ -66,12 +68,14 @@ def updateIoTNodeList(nodeObj):
     _globalNodeList.append(nodeObj)
 
 def main():
+
     class_IoTSV_MQTTManager.SubscriberThreading("IOTSV/REG", updateIoTNodeList).start()
-    app.run(debug=True)
+    app.run(debug=False)
 
     # sm = class_MQTTManager.SubscriberManager()
     # sm.subscribe("GW1")
 
 
 if __name__ == '__main__':
+    #_gg=1
     main()
