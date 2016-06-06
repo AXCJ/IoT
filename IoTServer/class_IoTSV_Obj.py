@@ -8,11 +8,19 @@ import IoTServer
 ###############################################################
 
 class NodeObj():
-    def __init__(self, NodeName, NodeFunctions, Functions):
+    def __init__(self, NodeName, NodeFunctions, Functions, NodeLBType,NodeMAC):
         self.NodeName = NodeName
         self.NodeFunctions = NodeFunctions
         self.Functions = Functions
+        self.NodeLBType = NodeLBType
+        self.NodeMAC = NodeMAC
 
+    def __iter__(self):
+        yield 'NodeName', self.NodeName
+        yield 'NodeFunctions', self.NodeFunctions
+        yield 'Functions', self.Functions
+        yield 'NodeLBType', self.NodeLBType
+        yield 'NodeMAC', self.NodeMAC
 
 class FunctionServerObj():
     global Function

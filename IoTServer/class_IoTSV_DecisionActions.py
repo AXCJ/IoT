@@ -15,6 +15,9 @@ from terminalColor import bcolors
 
 
 class DecisionAction():
+    def __init__(self, callbackST):
+        self.callbackST = callbackST
+
     def Judge(self, _obj_json_msg):
         spreate_obj_json_msg = copy.copy(_obj_json_msg)
 
@@ -37,16 +40,19 @@ class DecisionAction():
                     nodeObj = class_IoTSV_Obj.NodeObj(
                         spreate_obj_json_msg["Node"],
                         spreate_obj_json_msg["NodeFunctions"],
-                        spreate_obj_json_msg["Functions"])
+                        spreate_obj_json_msg["Functions"],
+                        spreate_obj_json_msg["NodeLBType"],
+                        spreate_obj_json_msg["NodeMAC"])
 
                     IoTServer._globalNodeList.append(nodeObj)
+                    self.callbackST(dict(nodeObj))
 
                     tempprint = "[DecisionActions] REG GW From %s ,_globalNodeList:" % (nodeObj.NodeName)
                     for p in IoTServer._globalNodeList: tempprint += p.NodeName + ", "
 
                     print(bcolors.OKGREEN + tempprint + bcolors.ENDC)
 
-                    class_IoTSV_MQTTManager.SubscriberThreading(spreate_obj_json_msg["Node"]).start()
+                    class_IoTSV_MQTTManager.SubscriberThreading(spreate_obj_json_msg["Node"], self.callbackST).start()
 
                     time.sleep(1)
                     fsmapping = Rules.FunctionServerMappingRules()

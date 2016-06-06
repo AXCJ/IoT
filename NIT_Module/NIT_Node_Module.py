@@ -4,25 +4,28 @@ import json
 import class_Node_MQTTManager
 import class_Node_Obj
 from terminalColor import bcolors
+from uuid import getnode as get_mac
 
 publisher = class_Node_MQTTManager.PublisherManager()
 
 
 class NIT_Node:
-    def __init__(self, nodeUUID, functions, nodeFunctions, mqttRegTopicName="IOTSV/REG"):
+    def __init__(self, nodeUUID, functions, nodeFunctions, mqttRegTopicName="IOTSV/REG", nodeLBT="DType", nodeMAC="AA-BB-CC-DD-EE-FF"):
         self.nodeUUID = nodeUUID
         self.functions = functions
         self.mqttRegTopicName = mqttRegTopicName
         self.nodeFunctions = nodeFunctions
         self.Rules = []
         self.CallBackRxRouting = None
+        self.nodeLBT = nodeLBT
+        self.nodeMAC = nodeMAC
 
 
 
     def RegisterNoode(self):
         _cst_MQTTRegTopicName = "IOTSV/REG"  # GW一開始要和IoT_Server註冊，故需要傳送信息至指定的MQTT Channel
         initMSGObj = {'Node': self.nodeUUID, 'Control': 'NODE_REG', 'NodeFunctions': self.nodeFunctions,
-                      'Functions': self.functions, 'Source': self.nodeUUID}
+                      'Functions': self.functions, 'Source': self.nodeUUID, 'NodeLBType':self.nodeLBT, 'NodeMAC':self.nodeMAC}
         initMSGSTR = json.dumps(initMSGObj)
         class_Node_MQTTManager.SubscriberThreading.callbackST = self.CallBackRxRouting
         class_Node_MQTTManager.SubscriberThreading(_cst_MQTTRegTopicName, self.nodeUUID).start()
