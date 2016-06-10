@@ -62,7 +62,7 @@ _gg = 0
 
 @app.route('/nit/iotsv/api/nodes', methods=['GET'])
 def get_tasks():
-    return jsonify({'tasks': _globalNodeList})
+    return jsonify({'nodes': _globalNodeList})
 
 def updateIoTNodeList(nodeObj):
     _globalNodeList.append(nodeObj)
@@ -70,7 +70,7 @@ def updateIoTNodeList(nodeObj):
 def main():
 
     class_IoTSV_MQTTManager.SubscriberThreading("IOTSV/REG", updateIoTNodeList).start()
-    app.run(debug=False)
+    app.run(debug=False,host="0.0.0.0")
 
     # sm = class_MQTTManager.SubscriberManager()
     # sm.subscribe("GW1")
