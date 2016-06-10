@@ -19,6 +19,7 @@ def fetchIoTNodeList():
     try:
         url = "http://192.168.88.253:5000/nit/iotsv/api/nodes"
         response = requests.get(url)
+        
         nodelist = json.loads(response.content.decode("utf-8"))
         print(str(nodelist))
     except Exception as e:
