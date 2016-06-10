@@ -67,9 +67,14 @@ def get_tasks():
 def updateIoTNodeList(nodeObj):
     _globalNodeList.append(nodeObj)
 
+def removeIoTNodeList(nodeObj):
+    for p in _globalNodeList:
+        if (p["NodeName"] == nodeObj.NodeName):
+            _globalNodeList.remove(p)
+
 def main():
 
-    class_IoTSV_MQTTManager.SubscriberThreading("IOTSV/REG", updateIoTNodeList).start()
+    class_IoTSV_MQTTManager.SubscriberThreading("IOTSV/REG", updateIoTNodeList, removeIoTNodeList).start()
     app.run(debug=False,host="0.0.0.0")
 
     # sm = class_MQTTManager.SubscriberManager()

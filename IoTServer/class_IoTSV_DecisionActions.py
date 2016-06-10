@@ -15,8 +15,9 @@ from terminalColor import bcolors
 
 
 class DecisionAction():
-    def __init__(self, callbackST):
-        self.callbackST = callbackST
+    def __init__(self, callbackNodeAppend, callbackNodeRemove):
+        self.callbackNodeAppend = callbackNodeAppend
+        self.callbackNodeRemove = callbackNodeRemove
 
     def Judge(self, _obj_json_msg):
         spreate_obj_json_msg = copy.copy(_obj_json_msg)
@@ -45,14 +46,14 @@ class DecisionAction():
                         spreate_obj_json_msg["NodeMAC"])
 
                     IoTServer._globalNodeList.append(nodeObj)
-                    self.callbackST(dict(nodeObj))
+                    self.callbackNodeAppend(dict(nodeObj))
 
                     tempprint = "[DecisionActions] REG GW From %s ,_globalNodeList:" % (nodeObj.NodeName)
                     for p in IoTServer._globalNodeList: tempprint += p.NodeName + ", "
 
                     print(bcolors.OKGREEN + tempprint + bcolors.ENDC)
 
-                    class_IoTSV_MQTTManager.SubscriberThreading(spreate_obj_json_msg["Node"], self.callbackST).start()
+                    class_IoTSV_MQTTManager.SubscriberThreading(spreate_obj_json_msg["Node"], self.callbackNodeAppend, self.callbackNodeRemove).start()
 
                     time.sleep(1)
                     fsmapping = Rules.FunctionServerMappingRules()
@@ -134,6 +135,8 @@ class DecisionAction():
                         print(bcolors.OKGREEN + "[DecisionActions] NODE remove %s" % (
                             nodeObj.NodeName) + bcolors.ENDC)
                         IoTServer._globalNodeList.remove(nodeObj)
+                        self.callbackNodeRemove(dict(nodeObj))
+
                         IsDelNode = True
                     except:
                         pass
@@ -151,6 +154,8 @@ class DecisionAction():
             for p in IoTServer._globalNodeList:
                 if (p.NodeName == spreate_obj_json_msg["Node"]):
                     IoTServer._globalNodeList.remove(p)
+                    self.callbackNodeRemove(p)
+
                     #class_IoTSV_MQTTManager.SubscriberManager
                     IsAlreadyREMOVE = True
                     print(bcolors.OKGREEN + "[DecisionActions] Remove Node Success" + bcolors.ENDC)

@@ -118,10 +118,11 @@ def NodeToServerMQTTThread(nodeType):
 
 if __name__ == "__main__":
 
-    MQTT_Thread = threading.Thread(target=NodeToServerMQTTThread, name="main_thread_D_"+str(1), kwargs={'nodeType':"TEST"})
-    MQTT_Thread.start()
-    NodeUUID ="NODE-" +str(uuid.uuid1())
-
+    for x in range(5):
+        MQTT_Thread = threading.Thread(target=NodeToServerMQTTThread, name="main_thread_D_"+str(1), kwargs={'nodeType':"TEST"})
+        MQTT_Thread.start()
+        NodeUUID ="NODE-" +str(uuid.uuid1())
+        time.sleep(0.05)
 
 
 
