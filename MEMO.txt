@@ -44,11 +44,9 @@ git pull
 
 gitk -all & 在背景執行git的GUI
 git branch 這個指令可以列出所有的 branch 並告訴你目前正在哪個 branch
-git branch cat 假設我們現在要開一支新的 branch 叫做 cat ，使用 git branch 來幫助你開一支新的 branch
-			   新的 branch cat 與 master 在同一條水平線上，表示目前他們的狀態是一模一樣的。
+git branch cat 假設我們現在要開一支新的 branch 叫做 cat ，使用 git branch 來幫助你開一支新的 branch 新的 branch cat 與 master 在同一條水平線上，表示目前他們的狀態是一模一樣的。
 
-git checkout cat 雖然我們建立了一個 cat 的 branch ，但其實我們所在的 branch 還是在 master branch，
-				 因此我們現在還需要切換過去，因此我們使用 git checkout 來切換：
+git checkout cat 雖然我們建立了一個 cat 的 branch ，但其實我們所在的 branch 還是在 master branch，因此我們現在還需要切換過去，因此我們使用 git checkout 來切換：
 				 
 
 				 
