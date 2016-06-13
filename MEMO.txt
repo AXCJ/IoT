@@ -40,6 +40,8 @@ git log 可以查看過去commit的紀錄
 git remote add origin https://github.com/<your name>/<repository name>.git 
 git push -u origin master
 
+git pull 
+
 gitk -all & 在背景執行git的GUI
 git branch 這個指令可以列出所有的 branch 並告訴你目前正在哪個 branch
 git branch cat 假設我們現在要開一支新的 branch 叫做 cat ，使用 git branch 來幫助你開一支新的 branch
