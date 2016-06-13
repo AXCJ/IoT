@@ -41,6 +41,7 @@ git remote add origin https://github.com/<your name>/<repository name>.git
 git push -u origin master
 
 git pull 
+git pull -a cat master    pull from remote 'cat' branch master
 
 gitk -all & 在背景執行git的GUI
 git branch 這個指令可以列出所有的 branch 並告訴你目前正在哪個 branch
@@ -48,7 +49,7 @@ git branch cat 假設我們現在要開一支新的 branch 叫做 cat ，使用 git branch 來幫助
 
 git checkout cat 雖然我們建立了一個 cat 的 branch ，但其實我們所在的 branch 還是在 master branch，因此我們現在還需要切換過去，因此我們使用 git checkout 來切換：
 				 
-
+git branch -d cat 刪除cat分支
 				 
 刪除檔案
 
