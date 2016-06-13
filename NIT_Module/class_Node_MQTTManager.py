@@ -90,11 +90,41 @@ class SubscriberManager():
 
 class PublisherManager():
     def MQTT_PublishMessage(self, topicName, message):  # 傳送到指定的Topic上
-        print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (
+        self.topicName = topicName
+
+        def on_connect(client, userdata, flags, rc):
+            print(bcolors.WARNING + "[INFO:python_pub] Connected MQTT Topic Server:" + self.topicName + " with result code " + str(
+                rc) + bcolors.ENDC)
+            # Subscribing in on_connect() means that if we lose the connection and
+            # reconnect then subscriptions will be renewed.
+            # print(type(self.topicName))
+            # client.subscribe(topicName)
+
+        def on_message(client, userdata, msg):
+            print(bcolors.WARNING + "[INFO:python_pub] MQTT message receive from Topic %s at %s :%s" % (
+                msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
+            if msg.topic == "image/jpg":
+                client.disconnect()
+
+        print(bcolors.WARNING + "[INFO:python_pub] MQTT Publishing message to topic: %s, Message:%s" % (
             topicName, message) + bcolors.ENDC)
         mqttc = mqtt.Client("python_pub")
+        mqttc.on_message = on_message
+        mqttc.on_connect = on_connect
+
         mqttc.connect(config_ServerIPList._g_cst_ToMQTTTopicServerIP, int(
             config_ServerIPList._g_cst_ToMQTTTopicServerPort))
-        mqttc.publish(topicName, message)
-        mqttc.loop(2)
-        mqttc.disconnect()
+        if topicName == "image/jpg":
+            mqttc.subscribe(topicName)
+            mqttc.publish(topicName, message)
+            # rc = 0
+            # while rc == 0:
+            #     rc = mqttc.loop(2)
+            # print("rc: " + str(rc))
+            mqttc.loop_forever()
+        else:
+            mqttc.publish(topicName, message)
+            mqttc.loop(2)
+            # mqttc.disconnect()
+
+
