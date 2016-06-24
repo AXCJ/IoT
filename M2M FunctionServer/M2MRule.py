@@ -8,6 +8,7 @@ import class_M2MFS_MQTTManager
 import json
 import copy
 from terminalColor import bcolors
+import base64
 # import M2MFunctionServer
 
 # RuleID, InputNode, InputNode, InputIO, OutputNode, OutputNode, OutputIO, TargetValueOverride
@@ -139,3 +140,26 @@ class FunctionServerMappingRules():
         NotifyNodes = list(set(NotifyNodes))
         for Nodes in NotifyNodes:
             self.replyM2MRulesAll(Nodes)
+
+
+class FunctionServerIDRules():
+    def __init__(self):
+        self.IDObj = class_M2MFS_Obj.IDObj()
+
+    def SaveGpsImage(self, Obj_Msg):
+        if Obj_Msg['GPS'] != "":
+            self.IDObj.Altitude = Obj_Msg['GPS'][0]
+            self.IDObj.Longitude = Obj_Msg['GPS'][1]
+            print('GPS_Altitude: ' + str(self.IDObj.Altitude))
+            print('GPS_Longitude: ' + str(self.IDObj.Longitude))
+
+        if Obj_Msg['IMG'] != "":
+            # f = str(self.IDObj.Altitude) + '/' + str(self.IDObj.Longitude) + '.jpg'
+            # with open(f, 'wb') as fw:
+            with open('testing_pic_receiving.jpg', 'wb') as fw:
+                imgstr = Obj_Msg['IMG'].encode('utf-8')  # str to bytes
+                image = base64.decodebytes(imgstr)  # base64 to binary
+                fw.write(image)
+                print(bcolors.WARNING + "[IMG] Save image success" + bcolors.ENDC)
+
+

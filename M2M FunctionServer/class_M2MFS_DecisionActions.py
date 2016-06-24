@@ -45,6 +45,10 @@ class DecisionAction():
             m2mfsmrules = FunctionServerMappingRules()
             m2mfsmrules.DelM2MRule(spreate_obj_json_msg["Rules"])
 
+        elif (spreate_obj_json_msg["Control"] == "ID"):
+            m2mfsmrules = FunctionServerIDRules()
+            m2mfsmrules.SaveGpsImage(spreate_obj_json_msg["GI"])
+
         else:
             print(bcolors.FAIL + "[DecisionActions] Receive message in wrong Control Signal! json:%s" % (
                 spreate_obj_json_msg) + bcolors.ENDC)

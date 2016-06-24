@@ -18,11 +18,9 @@ def on_message(mosq, obj, msg):
     print(bcolors.WARNING + "[INFO] MQTT message receive from Topic [%s] at %s :%s" % (
         msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
-    # print(isinstance(msg.payload, bytearray))
-    # print(isinstance(msg.payload, bytes))
-    # print(isinstance(msg.payload, str))
 
-    if msg.topic == "image/jpg":  # check if it is bytearray
+
+    if msg.topic == "image/jpg":
         with open('testing_pic_receiving.jpg', 'wb') as fw:
             fw.write(msg.payload)
 

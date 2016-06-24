@@ -102,8 +102,8 @@ class PublisherManager():
             # client.subscribe(topicName)
 
         def on_message(client, userdata, msg):
-            print(bcolors.WARNING + "[INFO] MQTT message receive from Topic %s at %s :%s" % (
-                msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
+            # print(bcolors.WARNING + "[INFO] MQTT message receive from Topic %s at %s :%s" % (
+            #     msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
             if msg.topic == "FS_Pic":
                 client.disconnect()
 

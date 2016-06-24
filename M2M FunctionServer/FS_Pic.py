@@ -36,7 +36,7 @@ _g_cst_FSUUID = "FS_Pic"
 
 def main():
     REGMSG = '{"FunctionServer":"%s", "Control":"FS_REG",' \
-             '"Function":"M2M","FSIP":"92.8.23.1", "MappingNodes":"[Cams]", "Source":"%s"}' % \
+             '"Function":"M2M","FSIP":"92.8.23.1", "MappingNodes":"[Cam]", "Source":"%s"}' % \
              (_g_cst_FSUUID, _g_cst_FSUUID)
 
     publisherManger = class_M2MFS_MQTTManager.PublisherManager()

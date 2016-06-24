@@ -49,3 +49,9 @@ class RuleObj:
         self.OutputNode = ""
         self.OutputIO = ""
         self.TargetValueOverride = ""
+
+
+class IDObj:
+    def __init__(self):
+        self.Altitude = ""
+        self.Longitude = ""
