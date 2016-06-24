@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 import time
 import config_ServerIPList
 from terminalColor import bcolors
+import class_Node_MQTTManager
+
 
 _g_cst_ToMQTTTopicServerIP = config_ServerIPList._g_cst_ToMQTTTopicServerIP
 _g_cst_ToMQTTTopicServerPort = config_ServerIPList._g_cst_ToMQTTTopicServerPort
@@ -11,8 +13,9 @@ _g_cst_ToMQTTTopicServerPort = config_ServerIPList._g_cst_ToMQTTTopicServerPort
 def on_connect(mosq, obj, rc):
     print("on_connect: " + str(rc))
 
+
 def on_message(mosq, obj, msg):
-    print(bcolors.WARNING + "[INFO] MQTT message receive from Topic %s at %s :%s" % (
+    print(bcolors.WARNING + "[INFO] MQTT message receive from Topic [%s] at %s :%s" % (
         msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
     # print(isinstance(msg.payload, bytearray))
@@ -26,7 +29,8 @@ def on_message(mosq, obj, msg):
     bytes(msg.payload)
 
 def on_publish(mosq, obj, mid):
-    print("on_publish: " + str(mid))
+    # print("on_publish: " + str(mid))
+    pass
 
 def on_subscribe(mosq, obj, mid, granted_qos):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
@@ -34,6 +38,8 @@ def on_subscribe(mosq, obj, mid, granted_qos):
 def on_log(mosq, obj, level, string):
     print(string)
 
+class_Node_MQTTManager.SubscriberThreading("image/jp").start()
+class_Node_MQTTManager.SubscriberThreading("msg/hello").start()
 
 client = mqtt.Client()
 # Assign event callbacks
@@ -46,14 +52,22 @@ client.on_subscribe = on_subscribe
 client.connect(_g_cst_ToMQTTTopicServerIP, int(_g_cst_ToMQTTTopicServerPort), 60)
 
 # Start subscribe
-print(client.subscribe("image/jpg"))
-print(client.subscribe("msg/hello"))
+# print(client.subscribe("image/jpg"))
+# print(client.subscribe("msg/hello"))
+
+
 
 # Publish a message
-client.publish("msg/hello", 'testing message')
+# client.publish("msg/hello", 'testing message')
+# client.publish("image/jp", 'hello')
+
 
 # Continue the network loop, exit when an error occurs
 rc = 0
 while rc == 0:
+    client.publish("msg/hello", {'testing message': 'this is test'})
+    client.publish("image/jp", {'message': 'this is image'})
     rc = client.loop()
 print("rc: " + str(rc))
+
+client.loop_forever()

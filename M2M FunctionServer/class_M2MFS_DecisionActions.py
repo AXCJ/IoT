@@ -9,13 +9,13 @@ import copy
 import sys
 import class_M2MFS_MQTTManager
 import class_M2MFS_Obj
-import M2MFunctionServer
+# import M2MFunctionServer
 from M2MRule import *
 from terminalColor import bcolors
 
 
 class DecisionAction():
-    def Judge(self, _obj_json_msg):
+    def Judge(self, _obj_topic, _obj_json_msg):
         spreate_obj_json_msg = copy.copy(_obj_json_msg)
 
         ########## Control REQTOPICLIST ##########
@@ -24,9 +24,9 @@ class DecisionAction():
             print(bcolors.OKBLUE + "[DecisionActions] REQTOPICLIST TopicName: %s" % spreate_obj_json_msg[
                 "Source"] + bcolors.ENDC)
 
-            m2mfsmrules = FunctionServerMappingRules()
+            m2mfsmrules = FunctionServerMappingRules(_obj_topic)
             time.sleep(1)
-            m2mfsmrules.replyM2MTopicToNode("FS1", spreate_obj_json_msg["Node"])
+            m2mfsmrules.replyM2MTopicToNode(_obj_topic, spreate_obj_json_msg["Node"])
 
 
         elif (spreate_obj_json_msg["Control"] == "M2M_GETRULE"):

@@ -7,16 +7,16 @@ import time
 import json
 # import base64
 import os
-
+import random
 import NIT_Node_Module
 from terminalColor import bcolors
 
-NodeUUID = "NODE-picture"
+NodeUUID = "NODE-Cam" + str(random.randint(1, 1000))
 # NodeUUID ="NODE-" +uuid.uuid1()
 
-Functions = ["LED1", "LED2", "SW1"]
-NodeFunctions = ['IOs', 'IPCams']
-
+Functions = ["Image"]
+NodeFunctions = ['Cams']
+FS_name = []
 print("::::::::::::::::::::::::::::::::::::::::::")
 print("::::::::::::::::::::::::::::::::::::::::::")
 print("'##::: ##::'#######::'########::'########:")
@@ -34,7 +34,7 @@ nit = NIT_Node_Module.NIT_Node(NodeUUID, Functions, NodeFunctions)
 
 # Connect to MQTT Server for communication
 def NodeToServerMQTTThread():
-    print("thread name：　" + threading.current_thread().getName())
+    # print("thread name：　" + threading.current_thread().getName())
 
     # callback
     nit.CallBackRxRouting = RxRouting
@@ -47,7 +47,7 @@ def NodeToServerMQTTThread():
 
     try:
 
-        nit.RegisterNoode()  # 向IoT_Server註冊 TopicName = "IOTSV/REG"
+        nit.RegisterNoode()  # 向IoT_Server註冊 TopicName = "IOTSV/REG" , 'Control': 'NODE_REG'
 
     except (RuntimeError, TypeError, NameError) as e:
         print(bcolors.FAIL + "[INFO]Register error." + str(e) + bcolors.ENDC)
@@ -56,31 +56,30 @@ def NodeToServerMQTTThread():
 
 
 ########### Keyboard interactive ##############
-def RxRouting(self, _obj_json_msg):
-    nit.M2M_RxRouting(_obj_json_msg)
+def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這邊新增功能
+    fs = nit.M2M_RxRouting(_obj_json_msg)
+    if fs != "":
+        FS_name.append(fs)
 
 
-global flip
 def loop():
-    global flip
+
     decide = "g"
-    decide = input("enter 't' or 'img' to trigger message or image, respectively.: \n")
+    decide = input("[Trig] Enter 'img' to send image: \n")
+    for FS in FS_name:
 
-    initMSGObj = {'TopicName': "NODE-picture", 'Control': 'picture_SET', 'Source': "NODE-picture", 'M2M_Value': flip}
-    initMSGSTR = json.dumps(initMSGObj)
-
-    if decide == "t":
-        nit.DirectMSG("NODE-picture", initMSGSTR)
-        flip = (~flip)
-
-    if decide == "img":
-        imageByteArray = convertImageToByteArray()
-        nit.DirectMSG("image/jpg", imageByteArray)
+        if FS == "FS_Pic":
+            print(FS)
+            initMSGObj = {'TopicName': FS, 'Control': 'Img_SET', 'Source': str(NodeUUID)}
+            initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
+            if decide == "img":
+                imageByteArray = convertImageToByteArray()
+                nit.DirectMSG(FS, imageByteArray)
 
 def convertImageToByteArray():
     with open("image_test.jpg", "rb") as image_file:
         imgByteArray = bytearray(image_file.read())
-        print(bcolors.WARNING + "[image] done" + bcolors.ENDC)
+        print(bcolors.WARNING + "[Image] done" + bcolors.ENDC)
     return imgByteArray
 
 
@@ -88,9 +87,6 @@ if __name__ == "__main__":
     print(bcolors.WARNING + "[main]" + bcolors.ENDC)
     MQTT_Thread = threading.Thread(target=NodeToServerMQTTThread, name="main_thread")
     MQTT_Thread.start()
-
-    global flip
-    flip = 0
 
     while True:
         loop()

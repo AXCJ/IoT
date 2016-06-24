@@ -58,8 +58,8 @@ class DecisionAction():
 
         ########## Control FS_REG ##########
         elif (spreate_obj_json_msg["Control"] == "FS_REG"):
-            print(bcolors.OKBLUE + "[DecisionActions] Start subscriber TopicName: %s" %
-                  spreate_obj_json_msg["FunctionServer"] + bcolors.ENDC)
+            # print(bcolors.OKBLUE + "[DecisionActions] Start subscriber TopicName: %s" %
+            #       spreate_obj_json_msg["FunctionServer"] + bcolors.ENDC)
 
             ## 防止重複註冊
             FSIsAlreadyREG = False

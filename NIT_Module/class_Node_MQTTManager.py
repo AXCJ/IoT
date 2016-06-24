@@ -51,7 +51,6 @@ class SubscriberManager():
                 rc) + bcolors.ENDC)
             # Subscribing in on_connect() means that if we lose the connection and
             # reconnect then subscriptions will be renewed.
-            # print(type(self.topicName))
             client.subscribe(topicName)
 
         # The callback for when a PUBLISH message is received from the server.
@@ -60,7 +59,9 @@ class SubscriberManager():
                 msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
             try:
                 if (msg.payload != ""):
-                    _obj_json_msg = json.loads(str(msg.payload, encoding="UTF-8"))
+                    # print(str(msg.payload, encoding="UTF-8"))
+                    # 將json轉對象(變量) (JavaScript Object Notation)
+                    _obj_json_msg = json.loads(str(msg.payload, encoding="UTF-8"))  # class dict
 
                     # from Simulator_Node import RxRouting
                     # RxRouting(_obj_json_msg)
@@ -69,7 +70,7 @@ class SubscriberManager():
                     self.callb(_obj_json_msg)
 
 
-            except (NameError, TypeError, RuntimeError) as e:
+            except (NameError, TypeError, RuntimeError, ValueError) as e:
                 print(bcolors.FAIL + "[ERROR] Couldn't converte json to Objet! " + str(e) + bcolors.ENDC)
 
         client = mqtt.Client()
@@ -93,7 +94,7 @@ class PublisherManager():
         self.topicName = topicName
 
         def on_connect(client, userdata, flags, rc):
-            print(bcolors.WARNING + "[INFO:python_pub] Connected MQTT Topic Server:" + self.topicName + " with result code " + str(
+            print(bcolors.WARNING + "[INFO] Connected MQTT Topic Server:" + self.topicName + " with result code " + str(
                 rc) + bcolors.ENDC)
             # Subscribing in on_connect() means that if we lose the connection and
             # reconnect then subscriptions will be renewed.
@@ -101,20 +102,20 @@ class PublisherManager():
             # client.subscribe(topicName)
 
         def on_message(client, userdata, msg):
-            print(bcolors.WARNING + "[INFO:python_pub] MQTT message receive from Topic %s at %s :%s" % (
+            print(bcolors.WARNING + "[INFO] MQTT message receive from Topic %s at %s :%s" % (
                 msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
-            if msg.topic == "image/jpg":
+            if msg.topic == "FS_Pic":
                 client.disconnect()
 
-        print(bcolors.WARNING + "[INFO:python_pub] MQTT Publishing message to topic: %s, Message:%s" % (
+        print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (
             topicName, message) + bcolors.ENDC)
-        mqttc = mqtt.Client("python_pub")
+        mqttc = mqtt.Client()
         mqttc.on_message = on_message
         mqttc.on_connect = on_connect
 
         mqttc.connect(config_ServerIPList._g_cst_ToMQTTTopicServerIP, int(
             config_ServerIPList._g_cst_ToMQTTTopicServerPort))
-        if topicName == "image/jpg":
+        if topicName == "FS_Pic":
             mqttc.subscribe(topicName)
             mqttc.publish(topicName, message)
             # rc = 0
@@ -125,6 +126,6 @@ class PublisherManager():
         else:
             mqttc.publish(topicName, message)
             mqttc.loop(2)
-            # mqttc.disconnect()
+            mqttc.disconnect()
 
 

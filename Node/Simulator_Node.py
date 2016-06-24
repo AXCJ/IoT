@@ -45,7 +45,7 @@ def NodeToServerMQTTThread():
 
     try:
 
-        nit.RegisterNoode();
+        nit.RegisterNoode();  # 'Control': 'NODE_REG'
 
     except (RuntimeError, TypeError, NameError) as e:
         print(bcolors.FAIL + "[INFO]Register error." + str(e) + bcolors.ENDC)
@@ -54,7 +54,7 @@ def NodeToServerMQTTThread():
 
 
 ########### Keyboard interactive ##############
-def RxRouting(self, _obj_json_msg):
+def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這邊新增功能
     nit.M2M_RxRouting(_obj_json_msg)
 
 
@@ -63,10 +63,9 @@ def loop():
     global flip
     decide = "g"
     decide = input("enter 't' to trigger")
-    print(decide)
 
-    initMSGObj = {'TopicName': "NODE-01/SW1", 'Control': 'M2M_SET', 'Source': "NODE-01", 'M2M_Value': flip}
-    initMSGSTR = json.dumps(initMSGObj)
+    initMSGObj = {"TopicName": "NODE-01/SW1", "Control": "M2M_SET", "Source": "NODE-01", "M2M_Value": flip}
+    initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
 
     if (decide == "t"):
         nit.DirectMSG("NODE-01/SW1", initMSGSTR)

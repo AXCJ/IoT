@@ -47,6 +47,7 @@ class NIT_Node:
                         Send_json = json.dumps(ReqToFS)
                         publisher.MQTT_PublishMessage(fp[0], Send_json)
                         class_Node_MQTTManager.SubscriberThreading(fp[0], self.nodeUUID).start()
+                        return fspair.FSName
                     except (RuntimeError, TypeError, NameError) as e:
                         print(bcolors.FAIL + "[ERROR] Send Request for topic list error!" + str(e) + bcolors.ENDC)
                         return

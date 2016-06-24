@@ -28,8 +28,8 @@ def on_connect(mosq, obj, rc):
     print("on_connect: " + str(rc))
 
 def on_message(mosq, obj, msg):
-    if msg.topic == 'image/jpg':
-        client.disconnect()
+    # if msg.topic == 'image/jpg':
+    #     client.disconnect()
     print("on_message: " + msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 
@@ -42,11 +42,11 @@ def on_subscribe(mosq, obj, mid, granted_qos):
 def on_log(mosq, obj, level, string):
     print(string)
 
-def convertImageToBase():
-    with open("image_test.jpg", "rb") as image_file:
-        imgByte = bytearray(image_file.read())
+def getImage(image):
+    with open(image, "rb") as image_file:
+        imgBytearray = bytearray(image_file.read())  # file.read() returns a bytes
         print(bcolors.WARNING + "[image] done" + bcolors.ENDC)
-    return imgByte
+    return imgBytearray
 
 
 client = mqtt.Client()
@@ -59,25 +59,20 @@ client.on_subscribe = on_subscribe
 # Connect
 client.connect(_g_cst_ToMQTTTopicServerIP, int(_g_cst_ToMQTTTopicServerPort), 60)
 
-# Start subscribe
+# Subscribe
 client.subscribe("msg/hello")
 client.subscribe("image/jpg")
+client.subscribe("IOTSV/REG")
 
-# Publish a message
-with open("image_test.jpg", "rb") as image_file:
-    imgBytearray = bytearray(image_file.read())  # file.read() returns a bytes
-    # print(bcolors.WARNING + "[image] " + str(imgBytearray) + bcolors.ENDC)
-
-# print(isinstance(imgBytearray, bytearray))  # check if it is bytearray
-# print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (
-#     "image/jpg", imgBytearray) + bcolors.ENDC)
-
-
+imgBytearray = getImage("image_test.jpg")
+# Publish messages
 print(client.publish("image/jpg", imgBytearray))
 print(client.publish("msg/hello", "hello"))
+print(client.publish("IOTSV/REG", "hello"))
+
 # Continue the network loop, exit when an error occurs
 rc = 0
-# while rc == 0:
-rc = client.loop_forever(20)
+while rc == 0:
+    rc = client.loop(2)
 print("rc: " + str(rc))
 

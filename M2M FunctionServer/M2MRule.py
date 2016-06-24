@@ -8,7 +8,7 @@ import class_M2MFS_MQTTManager
 import json
 import copy
 from terminalColor import bcolors
-import M2MFunctionServer
+# import M2MFunctionServer
 
 # RuleID, InputNode, InputNode, InputIO, OutputNode, OutputNode, OutputIO, TargetValueOverride
 # _g_M2MRulesMappingList = [["1", "Node1", "N1", "SW1", "Node2", "N2", "LED3", "DEF"],
@@ -27,14 +27,16 @@ _g_M2MRulesMappingList = [{"RuleID": "1", "InputNode": "NODE-01", "InputIO": "SW
                           {"RuleID": "4", "InputNode": "NODE-01", "InputIO": "SW1",
                            "OutputNode": "NODE-03", "OutputIO": "LED1", "TargetValueOverride": "EQU"},
 
-                           {"RuleID": "5", "InputNode": "NODE-03", "InputIO": "SW1",
-                           "OutputNode": "NODE-01", "OutputIO": "LED1", "TargetValueOverride": "EQU"}
+                          {"RuleID": "5", "InputNode": "NODE-03", "InputIO": "SW1",
+                           "OutputNode": "NODE-01", "OutputIO": "LED1", "TargetValueOverride": "EQU"},
+                          {"RuleID": "6", "InputNode": "NODE", "InputIO": "",
+                           "OutputNode": "NODE", "OutputIO": "", "TargetValueOverride": ""},
                           ]
 
 
 class FunctionServerMappingRules():
-    def __init__(self):
-        self.jsonObj = class_M2MFS_Obj.JSON_REPTOPICLIST()
+    def __init__(self, _obj_topic):
+        self.jsonObj = class_M2MFS_Obj.JSON_REPTOPICLIST(_obj_topic)
 
     def replyM2MTopicToNode(self, topicName, NodeName):
         self.jsonObj.Gateway = NodeName

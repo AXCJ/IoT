@@ -11,7 +11,7 @@ import copy
 import sys
 import class_M2MFS_DecisionActions
 from terminalColor import bcolors
-import  M2MFunctionServer
+# import  M2MFunctionServer
 
 
 # 上層目錄
@@ -37,6 +37,7 @@ class SubscriberThreading(Thread):
 class SubscriberManager():
     def subscribe(self, topicName):
         self.topicName = topicName
+        self._g_cst_FSUUID = topicName
         ########## MQTT Subscriber ##############
         # The callback for when the client receives a CONNACK response from the server.
         def on_connect(client, userdata, flags, rc):
@@ -59,9 +60,9 @@ class SubscriberManager():
                 if(msg.payload!=""):
                     # print("[INFO] Receive from MQTT %s" % msg.payload)
                     _obj_json_msg = json.loads(str(msg.payload, encoding="UTF-8"))
-                    if(_obj_json_msg["Source"] != M2MFunctionServer._g_cst_FSUUID):
-                        class_M2MFS_DecisionActions.DecisionAction().Judge(_obj_json_msg)
-            except (RuntimeError, TypeError, NameError) as e:
+                    if(_obj_json_msg["Source"] != self._g_cst_FSUUID):
+                        class_M2MFS_DecisionActions.DecisionAction().Judge(msg.topic, _obj_json_msg)
+            except (RuntimeError, TypeError, NameError, ValueError) as e:
                 print(bcolors.FAIL + "[ERROR] Couldn't converte json to Objet! Error Details:" + str(e) + bcolors.ENDC)
 
         client = mqtt.Client()
