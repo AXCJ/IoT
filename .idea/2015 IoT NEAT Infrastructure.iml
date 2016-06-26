@@ -5,8 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/Node" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Gateway" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Arduino" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/IoTServer" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/M2M FunctionServer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IoTServer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/IoT Server" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/NIT_Module" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.5.1 (/usr/local/Cellar/python3/3.5.1/Frameworks/Python.framework/Versions/3.5/bin/python3.5)" jdkType="Python SDK" />

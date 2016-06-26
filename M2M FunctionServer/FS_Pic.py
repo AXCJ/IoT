@@ -3,10 +3,11 @@
 from threading import Thread
 
 __author__ = 'Nathaniel'
-
+import os
 import json
 import copy
 import sys
+sys.path.append(os.path.split(os.getcwd())[0])
 from terminalColor import bcolors
 import class_M2MFS_MQTTManager
 
@@ -20,18 +21,18 @@ _g_cst_FSUUID = "FS_Pic"
 
 
 # _globalGWList = []
-#
-# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
-# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
-# print(bcolors.HEADER + "'##::::'##::'#######::'##::::'##::::'########::'######::'##::::'##:" + bcolors.ENDC)
-# print(bcolors.HEADER + " ###::'###:'##.... ##: ###::'###:::: ##.....::'##... ##: ##:::: ##:" + bcolors.ENDC)
-# print(bcolors.HEADER + " ####'####:..::::: ##: ####'####:::: ##::::::: ##:::..:: ##:::: ##:" + bcolors.ENDC)
-# print(bcolors.HEADER + " ## ### ##::'#######:: ## ### ##:::: ######:::. ######:: ##:::: ##:" + bcolors.ENDC)
-# print(bcolors.HEADER + " ##. #: ##:'##:::::::: ##. #: ##:::: ##...:::::..... ##:. ##:: ##::" + bcolors.ENDC)
-# print(bcolors.HEADER + " ##:.:: ##: ##:::::::: ##:.:: ##:::: ##:::::::'##::: ##::. ## ##:::" + bcolors.ENDC)
-# print(bcolors.HEADER + " ##:::: ##: #########: ##:::: ##:::: ##:::::::. ######::::. ###::::" + bcolors.ENDC)
-# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
-# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
+
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + "         ########::'######:::::'########::'####::'######::" + bcolors.ENDC)
+print(bcolors.HEADER + "         ##.....::'##... ##:::: ##.... ##:. ##::'##... ##:" + bcolors.ENDC)
+print(bcolors.HEADER + "         ##::::::: ##:::..::::: ##:::: ##:: ##:: ##:::..::" + bcolors.ENDC)
+print(bcolors.HEADER + "         ######:::. ######::::: ########::: ##:: ##:::::::" + bcolors.ENDC)
+print(bcolors.HEADER + "         ##...:::::..... ##:::: ##.....:::: ##:: ##:::::::" + bcolors.ENDC)
+print(bcolors.HEADER + "         ##:::::::'##::: ##:::: ##::::::::: ##:: ##::: ##:" + bcolors.ENDC)
+print(bcolors.HEADER + "         ##:::::::. ######::::: ##::::::::'####:. ######::" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
 
 
 def main():

@@ -77,7 +77,7 @@ class SubscriberManager():
         # manual interface.
 
         print(bcolors.WARNING + "[INFO] Subscribe TopicName:" + self.topicName + bcolors.ENDC)
-        client.loop_forever()
+        client.loop_forever(1)
 
 
 

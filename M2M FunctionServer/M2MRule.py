@@ -9,6 +9,7 @@ import json
 import copy
 from terminalColor import bcolors
 import base64
+import os
 # import M2MFunctionServer
 
 # RuleID, InputNode, InputNode, InputIO, OutputNode, OutputNode, OutputIO, TargetValueOverride
@@ -148,18 +149,18 @@ class FunctionServerIDRules():
 
     def SaveGpsImage(self, Obj_Msg):
         if Obj_Msg['GPS'] != "":
-            self.IDObj.Altitude = Obj_Msg['GPS'][0]
+            self.IDObj.Latitude = Obj_Msg['GPS'][0]
             self.IDObj.Longitude = Obj_Msg['GPS'][1]
-            print('GPS_Altitude: ' + str(self.IDObj.Altitude))
-            print('GPS_Longitude: ' + str(self.IDObj.Longitude))
+            print('GPS_Latitude: ', self.IDObj.Latitude, 'GPS_Longitude: ' + str(self.IDObj.Longitude))
 
         if Obj_Msg['IMG'] != "":
-            # f = str(self.IDObj.Altitude) + '/' + str(self.IDObj.Longitude) + '.jpg'
-            # with open(f, 'wb') as fw:
-            with open('testing_pic_receiving.jpg', 'wb') as fw:
-                imgstr = Obj_Msg['IMG'].encode('utf-8')  # str to bytes
-                image = base64.decodebytes(imgstr)  # base64 to binary
-                fw.write(image)
-                print(bcolors.WARNING + "[IMG] Save image success" + bcolors.ENDC)
-
-
+            fileName = str(self.IDObj.Latitude) + '_' + str(self.IDObj.Longitude) + '.jpg'  # file name = Lat_Lon
+            dirPath = os.path.join(os.path.abspath(os.curdir), 'Image')  # save image into directory 'Image'
+            if not os.path.exists(dirPath):
+                os.makedirs(dirPath)
+            filePath = os.path.join(dirPath, fileName)
+            with open(filePath, 'wb') as fw:
+                imgStr = Obj_Msg['IMG'].encode('utf-8')  # str to bytes
+                img = base64.decodebytes(imgStr)  # base64 to binary
+                fw.write(img)
+                print(bcolors.WARNING + "[IMG] Save image success!" + bcolors.ENDC)

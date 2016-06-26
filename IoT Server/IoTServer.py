@@ -8,6 +8,7 @@ import os
 import json
 import copy
 import sys
+sys.path.append(os.path.split(os.getcwd())[0])
 from terminalColor import  bcolors
 import class_IoTSV_MQTTManager
 

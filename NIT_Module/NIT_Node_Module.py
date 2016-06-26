@@ -68,3 +68,9 @@ class NIT_Node:
 
     def DirectMSG(self, topicName, msg):
         publisher.MQTT_PublishMessage(topicName, msg)
+
+
+class CustomError(Exception):
+    """Base class for other exceptions"""
+    def __init__(self, msg):
+        self.msg = msg

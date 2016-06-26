@@ -9,7 +9,10 @@ import time
 import json
 import copy
 import sys
+import os
+sys.path.append(os.path.abspath(os.curdir))
 import class_IoTSV_DecisionActions
+sys.path.append(os.path.split(os.getcwd())[0])
 from terminalColor import bcolors
 import IoTServer
 
@@ -72,7 +75,7 @@ class SubscriberManager():
 
                     # 測試用的，後來不用特意另外開thread
                     # DecisionActionsThreading(_obj_json_msg).start();
-                    if(_obj_json_msg["Source"] != IoTServer._g_cst_IoTServerUUID):
+                    if _obj_json_msg["Source"] != IoTServer._g_cst_IoTServerUUID:
                        class_IoTSV_DecisionActions.DecisionAction().Judge(_obj_json_msg)
             except (RuntimeError, TypeError, NameError, ValueError) as e:
                 # raise

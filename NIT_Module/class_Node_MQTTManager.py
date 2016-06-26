@@ -10,7 +10,7 @@ import sys
 import json
 import time
 from terminalColor import bcolors
-
+import threading
 # 上層目錄
 sys.path.append("..")
 import config_ServerIPList
@@ -110,19 +110,20 @@ class PublisherManager():
         print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (
             topicName, message) + bcolors.ENDC)
         mqttc = mqtt.Client()
+
         mqttc.on_message = on_message
         mqttc.on_connect = on_connect
 
         mqttc.connect(config_ServerIPList._g_cst_ToMQTTTopicServerIP, int(
             config_ServerIPList._g_cst_ToMQTTTopicServerPort))
-        if topicName == "FS_Pic":
+        if message.find('GI') > 0:
             mqttc.subscribe(topicName)
             mqttc.publish(topicName, message)
             # rc = 0
             # while rc == 0:
             #     rc = mqttc.loop(2)
             # print("rc: " + str(rc))
-            mqttc.loop_forever()
+            mqttc.loop_forever(1)
         else:
             mqttc.publish(topicName, message)
             mqttc.loop(2)

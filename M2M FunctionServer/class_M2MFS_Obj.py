@@ -53,5 +53,5 @@ class RuleObj:
 
 class IDObj:
     def __init__(self):
-        self.Altitude = ""
+        self.Latitude = ""
         self.Longitude = ""
