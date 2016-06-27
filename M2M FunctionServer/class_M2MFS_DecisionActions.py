@@ -53,21 +53,24 @@ class DecisionAction():
             IsAlreadyREMOVE = False
 
             for p in M2MRule.nodePosList:
-                if (p.NodeName == spreate_obj_json_msg["Node"]):
+                if p.NodeName == spreate_obj_json_msg["Node"]:
                     M2MRule.nodePosList.remove(p)
                     IsAlreadyREMOVE = True
                     print(bcolors.OKGREEN + "[DecisionActions] Remove Node Success" + bcolors.ENDC)
 
-            if (~IsAlreadyREMOVE):
-                print(bcolors.FAIL + "[DecisionActions] Remove Node NOT FOUND!" + bcolors.ENDC)
+            if ~IsAlreadyREMOVE:
+                tempprint = "[DecisionActions] Remove Node NOT FOUND! nodePosList:"
+                for p in nodePosList:
+                    tempprint += p.NodeName + ", "
+                print(bcolors.FAIL + tempprint + bcolors.ENDC)
 
-        elif (spreate_obj_json_msg["Control"] == "ID"):
-            m2mfsmrules = FunctionServerIDRules()
-            m2mfsmrules.SaveGpsImage(spreate_obj_json_msg["GI"])
+        elif spreate_obj_json_msg["Control"] == "ID":
+            m2fsidrules = FunctionServerIDRules()
+            m2fsidrules.SaveGpsImage(spreate_obj_json_msg["GI"])
 
-        elif (spreate_obj_json_msg["Control"] == "IMG_REQUEST"):
-            m2mfsmrules = FunctionServerIDRules()
-            m2mfsmrules.aaabbb(_obj_topic, spreate_obj_json_msg["Position"])
+        elif spreate_obj_json_msg["Control"] == "IMG_REQUEST":
+            m2fsidrules = FunctionServerIDRules()
+            m2fsidrules.imgRequest(_obj_topic, spreate_obj_json_msg["Position"])
 
         else:
             print(bcolors.FAIL + "[DecisionActions] Receive message in wrong Control Signal! json:%s" % (

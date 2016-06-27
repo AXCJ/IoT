@@ -39,7 +39,7 @@ _g_M2MRulesMappingList = [{"RuleID": "1", "InputNode": "NODE-01", "InputIO": "SW
 nodePosList = []
 
 class FunctionServerMappingRules():
-    def __init__(self, _obj_topic, _obj_msg):
+    def __init__(self, _obj_topic='FS1', _obj_msg=None):
         self.jsonObj = class_M2MFS_Obj.JSON_REPTOPICLIST(_obj_topic)
         self.msg = _obj_msg
 
@@ -50,6 +50,11 @@ class FunctionServerMappingRules():
             nodePosList.append(NodePos)  # save positions which can access
         # print(nodePosList)
         # print(self.NodePos.to_JSON())
+
+            tempprint = "[DecisionActions] REG Node From %s , nodePosList:" % (NodePos.NodeName)
+            for p in nodePosList:
+                tempprint += p.NodeName + ", "
+            print(bcolors.OKGREEN + tempprint + bcolors.ENDC)
 
     def replyM2MTopicToNode(self, topicName, NodeName):
         self.jsonObj.Gateway = NodeName
@@ -159,7 +164,7 @@ class FunctionServerIDRules():
         self.IDObj = class_M2MFS_Obj.IDObj()
 
     def SaveGpsImage(self, MsgObj):
-        if Obj_Msg['GPS'] != "":
+        if MsgObj['GPS'] != "":
             self.IDObj.Latitude = MsgObj['GPS'][0]
             self.IDObj.Longitude = MsgObj['GPS'][1]
             print('GPS_Latitude: ', self.IDObj.Latitude, 'GPS_Longitude: ' + str(self.IDObj.Longitude))
@@ -176,19 +181,17 @@ class FunctionServerIDRules():
                 fw.write(img)
                 print(bcolors.WARNING + "[IMG] Save image success!" + bcolors.ENDC)
 
-    def aaabbb(self, _obj_FSUUID, _ReqObj):
-        self.FSUUID = _obj_FSUUID
-
+    def imgRequest(self, _obj_FSUUID, _ReqObj):
         if nodePosList is not None:
             readyToRequestTopics = []
             for singlenodePos in nodePosList:
-                if (singlenodePos.NodePosition == _ReqObj):
+                if singlenodePos.NodePosition == _ReqObj:
                     readyToRequestTopics.append(singlenodePos.NodeName)
-        print(readyToRequestTopics)
-        if (len(readyToRequestTopics) > 0):
-            for singleTopicName in readyToRequestTopics:
-                self.RequestTopics = class_M2MFS_Obj.JSON_IMGREQUEST(self.FSUUID)
-                jsonstring = self.RequestTopics.to_JSON()
-                pm = class_M2MFS_MQTTManager.PublisherManager()
-                pm.MQTT_PublishMessage(singleTopicName, jsonstring)
-                print(bcolors.OKBLUE + "[Rules] IMG_REQUEST Send to topic:%s" % (self.FSUUID) + bcolors.ENDC)
+            print(nodePosList, readyToRequestTopics)
+            if len(readyToRequestTopics) > 0:
+                for singleTopicName in readyToRequestTopics:
+                    self.RequestTopics = class_M2MFS_Obj.JSON_IMGREQUEST(_obj_FSUUID)
+                    jsonString = self.RequestTopics.to_JSON()
+                    pm = class_M2MFS_MQTTManager.PublisherManager()
+                    pm.MQTT_PublishMessage(singleTopicName, jsonString)
+                    print(bcolors.OKBLUE + "[Rules] IMG_REQUEST Send to topic:%s" % (singleTopicName) + bcolors.ENDC)

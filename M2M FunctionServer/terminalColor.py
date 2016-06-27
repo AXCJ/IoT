@@ -7,6 +7,13 @@ class bcolors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
 
+    # HEADER = ''
+    # OKBLUE = ''
+    # OKGREEN = ''
+    # WARNING = ''
+    # FAIL = ''
+    # ENDC = ''
+
     def disable(self):
         self.HEADER = ''
         self.OKBLUE = ''

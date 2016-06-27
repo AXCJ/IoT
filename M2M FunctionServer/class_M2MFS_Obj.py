@@ -67,6 +67,9 @@ class NodePosObj():
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)  # , indent=4) 要indent在uncommit
 
+    def __repr__(self):
+        return '%s %s' % (repr(self.NodeName), repr(self.NodePosition))
+
 
 class JSON_IMGREQUEST():
     def to_JSON(self):

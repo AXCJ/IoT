@@ -17,7 +17,7 @@ sys.path.append("..")
 import config_ServerIPList
 
 _g_cst_MQTTRegTopicName = "IOTSV/REG"  # 一開始要和IoT_Server註冊，故需要傳送信息至指定的MQTT Channel
-_g_cst_FSUUID = "FS_Pic"
+_g_cst_FSUUID = "FS_CG"
 
 
 # _globalGWList = []
@@ -37,7 +37,7 @@ print(bcolors.HEADER + "::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 def main():
     REGMSG = '{"FunctionServer":"%s", "Control":"FS_REG",' \
-             '"Function":"M2M","FSIP":"92.8.23.1", "MappingNodes":"[Cam]", "Source":"%s"}' % \
+             '"Function":"M2M","FSIP":"92.8.23.1", "MappingNodes":"[CG, Cam, GPS]", "Source":"%s"}' % \
              (_g_cst_FSUUID, _g_cst_FSUUID)
 
     publisherManger = class_M2MFS_MQTTManager.PublisherManager()
