@@ -63,7 +63,7 @@ class SubscriberManager():
                     if(_obj_json_msg["Source"] != self._g_cst_FSUUID):
                         class_M2MFS_DecisionActions.DecisionAction().Judge(msg.topic, _obj_json_msg)
             except (RuntimeError, TypeError, NameError, ValueError) as e:
-                print(bcolors.FAIL + "[ERROR] Couldn't converte json to Objet! Error Details:" + str(e) + bcolors.ENDC)
+                print(bcolors.FAIL + "[ERROR] Couldn't converte json to Object! Error Details:" + str(e) + bcolors.ENDC)
 
         client = mqtt.Client()
         client.on_connect = on_connect

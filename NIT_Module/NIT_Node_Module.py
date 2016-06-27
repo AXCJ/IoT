@@ -9,13 +9,14 @@ publisher = class_Node_MQTTManager.PublisherManager()
 
 
 class NIT_Node:
-    def __init__(self, nodeUUID, functions, nodeFunctions, mqttRegTopicName="IOTSV/REG"):
+    def __init__(self, nodeUUID, functions, nodeFunctions, nodePosition=None, mqttRegTopicName="IOTSV/REG"):
         self.nodeUUID = nodeUUID
         self.functions = functions
         self.mqttRegTopicName = mqttRegTopicName
         self.nodeFunctions = nodeFunctions
         self.Rules = []
         self.CallBackRxRouting = None
+        self.pos = nodePosition
 
 
 
@@ -44,6 +45,8 @@ class NIT_Node:
                     try:
                         ReqToFS = {"Node": "%s" % self.nodeUUID, "Control": "M2M_REQTOPICLIST",
                                    "Source": "%s" % self.nodeUUID}
+
+                        ReqToFS["Position"] = self.pos
                         Send_json = json.dumps(ReqToFS)
                         publisher.MQTT_PublishMessage(fp[0], Send_json)
                         class_Node_MQTTManager.SubscriberThreading(fp[0], self.nodeUUID).start()

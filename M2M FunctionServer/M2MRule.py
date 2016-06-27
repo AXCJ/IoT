@@ -31,14 +31,25 @@ _g_M2MRulesMappingList = [{"RuleID": "1", "InputNode": "NODE-01", "InputIO": "SW
 
                           {"RuleID": "5", "InputNode": "NODE-03", "InputIO": "SW1",
                            "OutputNode": "NODE-01", "OutputIO": "LED1", "TargetValueOverride": "EQU"},
-                          {"RuleID": "6", "InputNode": "NODE", "InputIO": "",
-                           "OutputNode": "NODE", "OutputIO": "", "TargetValueOverride": ""},
-                          ]
 
+                          # CustomRuleFormat
+                          {"RuleID": "6", "InputNode": "NODE", "InputIO": "",
+                           "OutputNode": "NODE", "OutputIO": "IMG", "TargetValueOverride": ""},
+                          ]
+nodePosList = []
 
 class FunctionServerMappingRules():
-    def __init__(self, _obj_topic):
+    def __init__(self, _obj_topic, _obj_msg):
         self.jsonObj = class_M2MFS_Obj.JSON_REPTOPICLIST(_obj_topic)
+        self.msg = _obj_msg
+
+        if self.msg.get("Position") is not None:
+            NodePos = class_M2MFS_Obj.NodePosObj(self.msg["Node"], self.msg["Position"])  # () means initialization
+            # self.NodePos.Node = self.msg["Node"]
+            # self.NodePos.Position = self.msg["Node"]
+            nodePosList.append(NodePos)  # save positions which can access
+        # print(nodePosList)
+        # print(self.NodePos.to_JSON())
 
     def replyM2MTopicToNode(self, topicName, NodeName):
         self.jsonObj.Gateway = NodeName
@@ -147,20 +158,37 @@ class FunctionServerIDRules():
     def __init__(self):
         self.IDObj = class_M2MFS_Obj.IDObj()
 
-    def SaveGpsImage(self, Obj_Msg):
+    def SaveGpsImage(self, MsgObj):
         if Obj_Msg['GPS'] != "":
-            self.IDObj.Latitude = Obj_Msg['GPS'][0]
-            self.IDObj.Longitude = Obj_Msg['GPS'][1]
+            self.IDObj.Latitude = MsgObj['GPS'][0]
+            self.IDObj.Longitude = MsgObj['GPS'][1]
             print('GPS_Latitude: ', self.IDObj.Latitude, 'GPS_Longitude: ' + str(self.IDObj.Longitude))
 
-        if Obj_Msg['IMG'] != "":
+        if MsgObj['IMG'] != "":
             fileName = str(self.IDObj.Latitude) + '_' + str(self.IDObj.Longitude) + '.jpg'  # file name = Lat_Lon
             dirPath = os.path.join(os.path.abspath(os.curdir), 'Image')  # save image into directory 'Image'
             if not os.path.exists(dirPath):
                 os.makedirs(dirPath)
             filePath = os.path.join(dirPath, fileName)
             with open(filePath, 'wb') as fw:
-                imgStr = Obj_Msg['IMG'].encode('utf-8')  # str to bytes
+                imgStr = MsgObj['IMG'].encode('utf-8')  # str to bytes
                 img = base64.decodebytes(imgStr)  # base64 to binary
                 fw.write(img)
                 print(bcolors.WARNING + "[IMG] Save image success!" + bcolors.ENDC)
+
+    def aaabbb(self, _obj_FSUUID, _ReqObj):
+        self.FSUUID = _obj_FSUUID
+
+        if nodePosList is not None:
+            readyToRequestTopics = []
+            for singlenodePos in nodePosList:
+                if (singlenodePos.NodePosition == _ReqObj):
+                    readyToRequestTopics.append(singlenodePos.NodeName)
+        print(readyToRequestTopics)
+        if (len(readyToRequestTopics) > 0):
+            for singleTopicName in readyToRequestTopics:
+                self.RequestTopics = class_M2MFS_Obj.JSON_IMGREQUEST(self.FSUUID)
+                jsonstring = self.RequestTopics.to_JSON()
+                pm = class_M2MFS_MQTTManager.PublisherManager()
+                pm.MQTT_PublishMessage(singleTopicName, jsonstring)
+                print(bcolors.OKBLUE + "[Rules] IMG_REQUEST Send to topic:%s" % (self.FSUUID) + bcolors.ENDC)
