@@ -27,27 +27,24 @@ _g_cst_ToMQTTTopicServerPort = config_ServerIPList._g_cst_ToMQTTTopicServerPort
 class SubscriberThreading(Thread):
     global topicName
 
-    def __init__(self, topicName):
+    def __init__(self, topicName, callbackNodeAppend, callbackNodeRemove):
         Thread.__init__(self)
         self.topicName = topicName
-
+        self.callbackNodeAppend=callbackNodeAppend
+        self.callbackNodeRemove=callbackNodeRemove
     def run(self):
-        subscriberManager = SubscriberManager()
+        subscriberManager = SubscriberManager(self.callbackNodeAppend, self.callbackNodeRemove)
         subscriberManager.subscribe(self.topicName)
 
 
-# class DecisionActionsThreading(Thread):
-#     global _obj_json_msg
-#     def __init__(self,_obj_json_msg):
-#         Thread.__init__(self)
-#         self._obj_json_msg = _obj_json_msg
-#
-#     def run(self):
-#         decisionAction = class_DecisionActions.DecisionAction()
-#         decisionAction.Judge(self._obj_json_msg)
+
 
 
 class SubscriberManager():
+    def __init__(self, callbackNodeAppend, callbackNodeRemove):
+        self.callbackNodeAppend=callbackNodeAppend
+        self.callbackNodeRemove=callbackNodeRemove
+
     def subscribe(self, topicName):
         self.topicName = topicName
         ########## MQTT Subscriber ##############
@@ -73,14 +70,13 @@ class SubscriberManager():
                     # print("[INFO] Receive from MQTT %s" % msg.payload)
                     _obj_json_msg = json.loads(str(msg.payload, encoding='UTF-8'))
 
+
                     # 測試用的，後來不用特意另外開thread
                     # DecisionActionsThreading(_obj_json_msg).start();
-                    if _obj_json_msg["Source"] != IoTServer._g_cst_IoTServerUUID:
-                       class_IoTSV_DecisionActions.DecisionAction().Judge(_obj_json_msg)
-            # except (RuntimeError, TypeError, NameError, ValueError, KeyError) as e:
-            #     # raise
-            #     print(bcolors.FAIL + "[ERROR] Couldn't convert json to Object! Error Details:" + str(e) + bcolors.ENDC)
+                    if(_obj_json_msg["Source"] != IoTServer._g_cst_IoTServerUUID):
+                       class_IoTSV_DecisionActions.DecisionAction(self.callbackNodeAppend, self.callbackNodeRemove).Judge(_obj_json_msg)
             except Exception as e:
+                # raise
                 print(bcolors.FAIL + "[ERROR] Couldn't convert json to Object! Error Details:" + str(e) + bcolors.ENDC)
 
         client = mqtt.Client()

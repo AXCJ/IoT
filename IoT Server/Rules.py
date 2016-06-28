@@ -9,32 +9,29 @@ import class_IoTSV_MQTTManager
 import json
 from terminalColor import bcolors
 
-# 看到NodeFunction名為IOs的，代表該Node的訊息要Mapping到M2M的FS，他的TOPIC為FS1
-_g_FunctionServerMappingList = [{"FunctionTopic": "FS1", "Function": "M2M", "NodeFunction": "IOs"},
-                                {"FunctionTopic": "FS2", "Function": "Streaming", "NodeFunction": "IPCams"}]
-
 
 class FunctionServerMappingRules():
     def replyFSTopicToNode(self, topicName, NodeObj):
 
-        IsNodeMapping = False
+        IsHaveFSToMapping = False
 
         for FS in IoTServer._globalFSList:
-            for NodeFunctions in NodeObj.NodeFunctions:
+            for NodeFunction in NodeObj.NodeFunctions:
 
-                if (NodeFunctions in FS.MappingNodes):
+                if NodeFunction in FS.MappingNodes:
 
-                    if (not IsNodeMapping):
+                    if not IsHaveFSToMapping:
                         #### ASSIGN TO M2M FS ####
                         self.FSIP = class_IoTSV_Obj.FSIPObj \
                             (NodeObj.NodeName, IoTServer._g_cst_IoTServerUUID)
 
+
                     ### else append FSPairs ###
-                    self.FSIP.FSPairs.append([FS.FSName, FS.FSFunction, FS.IP, NodeFunctions])
+                    self.FSIP.FSPairs.append([FS.FSName, FS.FSFunction, FS.IP, NodeFunction])
 
-                    IsNodeMapping = True
+                    IsHaveFSToMapping = True
 
-        if (IsNodeMapping == False):
+        if IsHaveFSToMapping == False:
             self.FSIP = class_IoTSV_Obj.FSIPObj \
                 (NodeObj.NodeName, IoTServer._g_cst_IoTServerUUID)
             self.FSIP.FSPairs = [['x', 'x', 'x', 'x']]

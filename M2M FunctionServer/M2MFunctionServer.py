@@ -43,7 +43,7 @@ def main():
     publisherManger.MQTT_PublishMessage(_g_cst_MQTTRegTopicName, REGMSG)
 
     # 訂閱自身名稱topic
-    class_M2MFS_MQTTManager.SubscriberThreading(_g_cst_FSUUID).start()
+    class_M2MFS_MQTTManager.SubscriberThreading(_g_cst_FSUUID).run()
 
 
 if __name__ == '__main__':
