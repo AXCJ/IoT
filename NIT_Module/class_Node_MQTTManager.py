@@ -104,7 +104,7 @@ class PublisherManager():
         def on_message(client, userdata, msg):
             # print(bcolors.WARNING + "[INFO] MQTT message receive from Topic %s at %s :%s" % (
             #     msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
-            if msg.topic == "FS_CG":
+            if msg.topic == "CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45":
                 client.disconnect()
 
         print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (

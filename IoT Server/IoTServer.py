@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from threading import Thread
-from flask import Flask, jsonify
-from flask import abort
+# from flask import Flask, jsonify
+# from flask import abort
 
 
 
@@ -42,7 +42,7 @@ print(bcolors.HEADER + "....:::.......::::::..::::::......::::::...:::::" + bcol
 print(bcolors.HEADER + "::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
 
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 tasks = [
     {
@@ -61,7 +61,7 @@ tasks = [
 
 _gg = 0
 
-@app.route('/nit/iotsv/api/nodes', methods=['GET'])
+# @app.route('/nit/iotsv/api/nodes', methods=['GET'])
 def get_tasks():
     return jsonify({'nodes': _globalNodeList})
 
@@ -76,7 +76,7 @@ def removeIoTNodeList(nodeObj):
 def main():
 
     class_IoTSV_MQTTManager.SubscriberThreading("IOTSV/REG", updateIoTNodeList, removeIoTNodeList).start()
-    app.run(debug=False,host="0.0.0.0")
+    # app.run(debug=False,host="0.0.0.0")
 
     # sm = class_MQTTManager.SubscriberManager()
     # sm.subscribe("GW1")
