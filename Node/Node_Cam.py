@@ -13,6 +13,11 @@ sys.path.append("..")
 from terminalColor import bcolors
 import random
 import base64
+import uuid
+
+NodeUUID = "CamGPS_NCKUMVLAB92823@NODE-" + str(uuid.uuid1())
+
+is_request = False
 CG = False
 if CG:
     import picamera
@@ -24,15 +29,13 @@ if CG:
     gps_socket.connect()
     gps_socket.watch()
 
-NodeUUID = "NODE-Cam" + str(random.randint(1, 1000))
-# NodeUUID ="NODE-" +uuid.uuid1()
-
 Functions = ["Image"]
 NodeFunctions = ['Cam']  # ['Cam', 'GPS', 'CG']
 NodePosition = 'Tiger'
 FuncSVList = []
-is_request = False
 cameraIdx = 0
+
+
 
 print("::::::::::::::::::::::::::::::::::::::::::")
 print("::::::::::::::::::::::::::::::::::::::::::")
@@ -83,23 +86,36 @@ def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這�
     global is_request
     if fs is not None:
         FuncSVList.append(fs)
-
-    if _obj_json_msg["Source"] == 'FS_CG':
+        print(FuncSVList)
+    if _obj_json_msg["Source"] == 'CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45':
         if _obj_json_msg["Control"] == "IMG_REQUEST":  # reply image if get img_request
-            initMSGObj = {'TopicName': _obj_json_msg["Source"], 'Control': 'IMG_REPLY', 'Source': str(NodeUUID)}
-            initMSGObj['GI'] = {'GPS': ['25.033' + str(random.randint(1, 1000)), '121.564101'],
-                                "IMG": imageToBase64Str(NodePosition)}
+            initMSGObj = {'TopicName': _obj_json_msg["Source"], 'Control': 'IMG_REPLY', 'Source': NodeUUID, 'Position': NodePosition}
+            gpsData = ['25.033' + str(random.randint(1, 1000)), '121.564101']
+            if CG:
+                imgData = imageToBase64Str()
+                for new_data in gps_socket:
+                    if new_data:
+                        gps_fix.refresh(new_data)
+                        Latitude = gps_fix.TPV['lat']
+                        Longitude = gps_fix.TPV['lon']
+                        if (Latitude != "n/a" and Longitude != "n/a"):
+                            # print('Latitude: ', gps_fix.TPV['time'])
+                            gpsData = [Latitude, Longitude]
+                            break
+            else:
+                imgData = imageToBase64Str(NodePosition)
+
+            initMSGObj['GI'] = {'GPS': gpsData, "IMG": imgData}
             initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
             nit.DirectMSG(_obj_json_msg["Source"], initMSGSTR)  # Publish directly
-            # threading.Thread(target=nit.DirectMSG(_obj_json_msg["Source"], initMSGSTR), name="pub_thread").start()
             print(bcolors.WARNING + "[IMG] Sending image success!" + bcolors.ENDC)
 
     if is_request:
         if _obj_json_msg["Control"] == 'IMG_REPLY':
             if _obj_json_msg['GI'] != "":
                 # file name = Lat_Lon.jpg
-                fileName = _obj_json_msg['GI']['GPS'][0] + '_' + _obj_json_msg['GI']['GPS'][1] + '.jpg'
-                dirPath = os.path.join(os.path.abspath(os.curdir), 'Image')  # save image into directory 'Image'
+                fileName = time.strftime("%Y%m%d_%H %M %S") + '_' + _obj_json_msg['GI']['GPS'][0] + '_' + _obj_json_msg['GI']['GPS'][1] + '.jpg'
+                dirPath = os.path.join(os.path.abspath(os.curdir) + '/' + time.strftime("%Y%m%d") + '/' + NodePosition + '/' + _obj_json_msg['Position'])  # save image into directory 'Image'
                 if not os.path.exists(dirPath):
                     os.makedirs(dirPath)
                 filePath = os.path.join(dirPath, fileName)
@@ -115,11 +131,15 @@ def imageToBase64Str(obj=''):
     try:
         if CG:
             imgName = "Capture" + str(cameraIdx) + ".jpg"
-            camera.capture(imgName)
+            dirPath = os.path.join(os.path.abspath(os.curdir) + '/' + 'CAMERA')
+            if not os.path.exists(dirPath):
+                os.makedirs(dirPath)
+            f = os.path.join(dirPath, imgName)
+            camera.capture(f)
         # time.sleep(1)
         else:
-            imgName = obj + '.jpg'
-        with open(imgName, "rb") as f_img:
+            f = obj + '.jpg'
+        with open(f, "rb") as f_img:
             image = base64.encodebytes(f_img.read())  # binary to base64
             imgStr = image.decode('utf-8')  # bytes to str
             print(bcolors.WARNING + "[IMAGE] Open image success" + bcolors.ENDC)
@@ -137,8 +157,8 @@ def loop():
                            "Enter 'c' to toggle image saving switch:\n")
             if decide == "img":
                 for FS in FuncSVList:
-                    initMSGObj = {'TopicName': FS, 'Control': 'ID', 'Source': str(NodeUUID)}
-                    if FS == "FS_CG":
+                    initMSGObj = {'TopicName': FS, 'Control': 'ID', 'Source': NodeUUID, 'Position': NodePosition}
+                    if FS == "CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45":
                         gpsData = ['25.033' + str(random.randint(1, 1000)), '121.564101']
                         if CG:
                             imgData = imageToBase64Str()
@@ -174,12 +194,15 @@ def loop():
             elif decide == 'c':
                 global is_request
                 is_request = not is_request
+                print('save image = %s' % is_request)
+                # nit.DirectMSG('IOTSV/REG', '123456')
 
 
             else:
                 print(bcolors.FAIL + '[Err] Please enter correct command.' + bcolors.ENDC)
     except CustomError as e:
         print(e)
+        # pass
 
 
 

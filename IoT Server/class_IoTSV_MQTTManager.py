@@ -77,9 +77,11 @@ class SubscriberManager():
                     # DecisionActionsThreading(_obj_json_msg).start();
                     if _obj_json_msg["Source"] != IoTServer._g_cst_IoTServerUUID:
                        class_IoTSV_DecisionActions.DecisionAction().Judge(_obj_json_msg)
-            except (RuntimeError, TypeError, NameError, ValueError) as e:
-                # raise
-                print(bcolors.FAIL + "[ERROR] Couldn't converte json to Objet! Error Details:" + str(e) + bcolors.ENDC)
+            # except (RuntimeError, TypeError, NameError, ValueError, KeyError) as e:
+            #     # raise
+            #     print(bcolors.FAIL + "[ERROR] Couldn't convert json to Object! Error Details:" + str(e) + bcolors.ENDC)
+            except Exception as e:
+                print(bcolors.FAIL + "[ERROR] Couldn't convert json to Object! Error Details:" + str(e) + bcolors.ENDC)
 
         client = mqtt.Client()
         client.on_connect = on_connect

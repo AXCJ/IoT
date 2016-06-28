@@ -5,12 +5,12 @@ import sys
 import threading
 import time
 import json
-
+import uuid
 import NIT_Node_Module
 from terminalColor import bcolors
 
 NodeUUID = "NODE-01"
-# NodeUUID ="NODE-" +uuid.uuid1()
+# NodeUUID = "NODE-" + str(uuid.uuid1())
 
 Functions = ["LED1", "LED2", "SW1"]
 NodeFunctions = ['IOs', 'IPCams']

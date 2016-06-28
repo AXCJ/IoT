@@ -38,6 +38,7 @@ class FunctionServerMappingRules():
             self.FSIP = class_IoTSV_Obj.FSIPObj \
                 (NodeObj.NodeName, IoTServer._g_cst_IoTServerUUID)
             self.FSIP.FSPairs = [['x', 'x', 'x', 'x']]
+            self.FSIP.FSPairs = [['x']]
 
         jsonstring = self.FSIP.to_JSON()
 
