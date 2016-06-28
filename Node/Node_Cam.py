@@ -84,7 +84,7 @@ def NodeToServerMQTTThread():
 def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這邊新增功能
     fs = nit.M2M_RxRouting(_obj_json_msg)
     global is_request
-    if fs is not None:
+    if fs is not None and fs not in FuncSVList:
         FuncSVList.append(fs)
         print(FuncSVList)
     if _obj_json_msg["Source"] == 'CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45':
