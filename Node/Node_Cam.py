@@ -11,6 +11,7 @@ sys.path.append(os.path.join(os.path.split(os.getcwd())[0], 'NIT_Module'))
 import NIT_Node_Module
 sys.path.append("..")
 from terminalColor import bcolors
+import class_Node_MQTTManager
 import random
 import base64
 import uuid
@@ -56,6 +57,11 @@ class CustomError(Exception):
     """Base class for other exceptions"""
     def __init__(self, msg='err'):
         self.msg = msg
+
+
+def PUBLISHER(FS, MSG):
+    publisher = class_Node_MQTTManager.PublisherManager()
+    publisher.MQTT_PublishMessage(FS, MSG)
 
 
 # Connect to MQTT Server for communication
@@ -209,6 +215,27 @@ def loop():
 if __name__ == "__main__":
     MQTT_Thread = threading.Thread(target=NodeToServerMQTTThread, name="main_thread")
     MQTT_Thread.start()
+    # for x in range(5):
+    #     initMSGObj = {'TopicName': 'CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', 'Control': 'NO', 'Source': NodeUUID, 'Position': NodePosition}
+    #     imgData = imageToBase64Str('cat')
+    #     initMSGObj['IMG'] = imgData
+    #     print(bcolors.OKBLUE + '[Thread] active_count: ' + str(threading.active_count()) + bcolors.ENDC)
+    #     print(bcolors.OKBLUE + '[Thread] threading.enumerate: ' + str(threading.enumerate()) + bcolors.ENDC)
+    #     initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
+    #     threading.Thread(
+    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
+    #     threading.Thread(
+    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
+    #     threading.Thread(
+    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
+    #     threading.Thread(
+    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
+    #     threading.Thread(
+    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
+    #     # PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)
+    #     print(bcolors.OKBLUE + '[Thread] active_count: ' + str(threading.active_count()) + bcolors.ENDC)
+    #     print(bcolors.OKBLUE + '[Thread] threading.enumerate: ' + str(threading.enumerate()) + bcolors.ENDC)
+
     time.sleep(4)
     while True:
         time.sleep(0.1)

@@ -106,6 +106,7 @@ class PublisherManager():
             #     msg.topic, time.asctime(time.localtime(time.time())), str(msg.payload)) + bcolors.ENDC)
             if msg.topic == "CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45":
                 client.disconnect()
+                # pass
 
         print(bcolors.WARNING + "[INFO] MQTT Publishing message to topic: %s, Message:%s" % (
             topicName, message) + bcolors.ENDC)
@@ -116,14 +117,19 @@ class PublisherManager():
 
         mqttc.connect(config_ServerIPList._g_cst_ToMQTTTopicServerIP, int(
             config_ServerIPList._g_cst_ToMQTTTopicServerPort))
-        if message.find('GI') > 0:
-            mqttc.subscribe(topicName)
-            mqttc.publish(topicName, message)
-            # rc = 0
-            # while rc == 0:
-            #     rc = mqttc.loop(2)
-            # print("rc: " + str(rc))
-            mqttc.loop_forever(1)
+        if isinstance(message, str):
+            if message.find('GI') > 0:
+                mqttc.subscribe(topicName)
+                mqttc.publish(topicName, message)
+                # rc = 0
+                # while rc == 0:
+                #     rc = mqttc.loop(2)
+                # print("rc: " + str(rc))
+                mqttc.loop_forever(1)
+            else:
+                mqttc.publish(topicName, message)
+                mqttc.loop(2)
+                mqttc.disconnect()
         else:
             mqttc.publish(topicName, message)
             mqttc.loop(2)
