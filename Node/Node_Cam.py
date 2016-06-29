@@ -38,17 +38,27 @@ cameraIdx = 0
 
 
 
-print("::::::::::::::::::::::::::::::::::::::::::")
-print("::::::::::::::::::::::::::::::::::::::::::")
-print("'##::: ##::'#######::'########::'########:")
-print(" ###:: ##:'##.... ##: ##.... ##: ##.....::")
-print(" ####: ##: ##:::: ##: ##:::: ##: ##:::::::")
-print(" ## ## ##: ##:::: ##: ##:::: ##: ######:::")
-print(" ##. ####: ##:::: ##: ##:::: ##: ##...::::")
-print(" ##:. ###: ##:::: ##: ##:::: ##: ##:::::::")
-print(" ##::. ##:. #######:: ########:: ########:")
-print("..::::..:::.......:::........:::........::")
-print("::::::::::::::::::::::::::::::::::::::::::\n")
+print(bcolors.HEADER + "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" + bcolors.ENDC)
+print(bcolors.HEADER + " a88888b.                      .88888.   888888ba  .d88888b  " + bcolors.ENDC)
+print(bcolors.HEADER + "d8'   `88                     d8'   `88  88    `8b 88.    "    + bcolors.ENDC)
+print(bcolors.HEADER + "88        .d8888b. 88d8b.d8b. 88        a88aaaa8P' `Y88888b. " + bcolors.ENDC)
+print(bcolors.HEADER + "88        88'  `88 88'`88'`88 88   YP88  88              `8b " + bcolors.ENDC)
+print(bcolors.HEADER + "Y8.   .88 88.  .88 88  88  88 Y8.   .88  88        d8'   .8P " + bcolors.ENDC)
+print(bcolors.HEADER + " Y88888P' `88888P8 dP  dP  dP  `88888'   dP         Y88888P  " + bcolors.ENDC)
+print(bcolors.HEADER + "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo" + bcolors.ENDC)
+
+
+# print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+# print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+# print("    ::'######:::::'###::::'##::::'##::'######:::'########:::'######:::")
+# print("    ::##... ##:::'## ##::: ###::'###:'##... ##:: ##.... ##:'##... ##::")
+# print("    ::##:::..:::'##:. ##:: ####'####: ##:::..::: ##:::: ##: ##:::..:::")
+# print("    ::##:::::::'##:::. ##: ## ### ##: ##::'####: ########::. ######:::")
+# print("    ::##::::::: #########: ##. #: ##: ##::: ##:: ##.....::::..... ##::")
+# print("    ::##::: ##: ##.... ##: ##:.:: ##: ##::: ##:: ##::::::::'##::: ##::")
+# print("    :: ######:: ##:::: ##: ##:::: ##:. ######::: ##::::::::. ######:::")
+# print("::::::......:::..:::::..::..:::::..:::......::::..::::::::::......::::::::::")
+# print("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n")
 
 nit = NIT_Node_Module.NIT_Node(NodeUUID, Functions, NodeFunctions, NodePosition)
 
@@ -96,7 +106,8 @@ def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這�
     if _obj_json_msg["Source"] == 'CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45':
         if _obj_json_msg["Control"] == "IMG_REQUEST":  # reply image if get img_request
             initMSGObj = {'TopicName': _obj_json_msg["Source"], 'Control': 'IMG_REPLY', 'Source': NodeUUID, 'Position': NodePosition}
-            gpsData = ['25.033' + str(random.randint(1, 1000)), '121.564101']
+            gpsData = ['25.033' + str(random.randint(1, 1000)), '121.564' + str(random.randint(1, 1000))]
+            os.system('echo heartbeat | sudo tee /sys/class/leds/led0/trigger')
             if CG:
                 imgData = imageToBase64Str()
                 for new_data in gps_socket:
@@ -114,13 +125,15 @@ def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這�
             initMSGObj['GI'] = {'GPS': gpsData, "IMG": imgData}
             initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
             nit.DirectMSG(_obj_json_msg["Source"], initMSGSTR)  # Publish directly
+            os.system('echo none | sudo tee /sys/class/leds/led0/trigger')
             print(bcolors.WARNING + "[IMG] Sending image success!" + bcolors.ENDC)
 
     if is_request:
         if _obj_json_msg["Control"] == 'IMG_REPLY':
             if _obj_json_msg['GI'] != "":
                 # file name = Lat_Lon.jpg
-                fileName = time.strftime("%Y%m%d_%H %M %S") + '_' + _obj_json_msg['GI']['GPS'][0] + '_' + _obj_json_msg['GI']['GPS'][1] + '.jpg'
+                os.system('echo heartbeat | sudo tee /sys/class/leds/led0/trigger')
+                fileName = time.strftime("%Y%m%d_%H %M %S") + '_' + str(_obj_json_msg['GI']['GPS'][0]) + '_' + str(_obj_json_msg['GI']['GPS'][1]) + '.jpg'
                 dirPath = os.path.join(os.path.abspath(os.curdir) + '/' + time.strftime("%Y%m%d") + '/' + NodePosition + '/' + _obj_json_msg['Position'])  # save image into directory 'Image'
                 if not os.path.exists(dirPath):
                     os.makedirs(dirPath)
@@ -130,13 +143,15 @@ def RxRouting(self, _obj_json_msg):  # 收到訊息會執行這個，可在這�
                     img = base64.decodebytes(imgStr)  # base64 to binary
                     fw.write(img)
                     print(bcolors.WARNING + "[IMG] Save image success!" + bcolors.ENDC)
-
+                os.system('echo none | sudo tee /sys/class/leds/led0/trigger')
 
 
 def imageToBase64Str(obj=''):
     try:
         if CG:
+            global cameraIdx
             imgName = "Capture" + str(cameraIdx) + ".jpg"
+            cameraIdx += 1
             dirPath = os.path.join(os.path.abspath(os.curdir) + '/' + 'CAMERA')
             if not os.path.exists(dirPath):
                 os.makedirs(dirPath)
@@ -166,6 +181,7 @@ def loop():
                     initMSGObj = {'TopicName': FS, 'Control': 'ID', 'Source': NodeUUID, 'Position': NodePosition}
                     if FS == "CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45":
                         gpsData = ['25.033' + str(random.randint(1, 1000)), '121.564101']
+                        os.system('echo heartbeat | sudo tee /sys/class/leds/led0/trigger')
                         if CG:
                             imgData = imageToBase64Str()
                             for new_data in gps_socket:
@@ -180,12 +196,13 @@ def loop():
                         else:
                             imgData = imageToBase64Str(input('[img] Enter image name for sending. (e.g. cat, view): '))
 
-                        # initMSGObj["IMG"] = imageToBase64Str()  # In Python 3, they removed byte support in json
-                        # initMSGObj['GPS'] = ['Latitude', 'Longitude']
+                        # In Python 3, they removed byte support in json
+                        # ## ['GPS'] = ['Latitude', 'Longitude']
                         initMSGObj['GI'] = {'GPS': gpsData,
                                             "IMG": imgData}
                         initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
                         nit.DirectMSG(FS, initMSGSTR)  # Publish directly
+                        os.system('echo none | sudo tee /sys/class/leds/led0/trigger')
                         # threading.Thread(target=nit.DirectMSG(FS, initMSGSTR), name="pub_thread").start()
                         # print(bcolors.OKBLUE + '[Thread] active_count: ' + str(threading.active_count()) + bcolors.ENDC)
                         # print(bcolors.OKBLUE + '[Thread] threading.enumerate: ' + str(threading.enumerate()) + bcolors.ENDC)
@@ -215,28 +232,8 @@ def loop():
 if __name__ == "__main__":
     MQTT_Thread = threading.Thread(target=NodeToServerMQTTThread, name="main_thread")
     MQTT_Thread.start()
-    # for x in range(5):
-    #     initMSGObj = {'TopicName': 'CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', 'Control': 'NO', 'Source': NodeUUID, 'Position': NodePosition}
-    #     imgData = imageToBase64Str('cat')
-    #     initMSGObj['IMG'] = imgData
-    #     print(bcolors.OKBLUE + '[Thread] active_count: ' + str(threading.active_count()) + bcolors.ENDC)
-    #     print(bcolors.OKBLUE + '[Thread] threading.enumerate: ' + str(threading.enumerate()) + bcolors.ENDC)
-    #     initMSGSTR = json.dumps(initMSGObj)  # 將對象轉json(JavaScript Object Notation)
-    #     threading.Thread(
-    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
-    #     threading.Thread(
-    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
-    #     threading.Thread(
-    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
-    #     threading.Thread(
-    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
-    #     threading.Thread(
-    #         target=PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)).start()
-    #     # PUBLISHER('CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45', initMSGSTR)
-    #     print(bcolors.OKBLUE + '[Thread] active_count: ' + str(threading.active_count()) + bcolors.ENDC)
-    #     print(bcolors.OKBLUE + '[Thread] threading.enumerate: ' + str(threading.enumerate()) + bcolors.ENDC)
-
-    time.sleep(4)
-    while True:
-        time.sleep(0.1)
-        loop()
+    if not CG:
+        time.sleep(4)
+        while True:
+            time.sleep(0.1)
+            loop()

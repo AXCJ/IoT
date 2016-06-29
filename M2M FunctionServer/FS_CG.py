@@ -23,17 +23,30 @@ _g_cst_FSUUID = "CG_NCKUMVLAB92823@FS-41d0b11e-3d3a-11e6-a655-3c07544f6d45"
 
 # _globalGWList = []
 
-print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
-print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
-print(bcolors.HEADER + "         ########::'######:::::'########::'####::'######::" + bcolors.ENDC)
-print(bcolors.HEADER + "         ##.....::'##... ##:::: ##.... ##:. ##::'##... ##:" + bcolors.ENDC)
-print(bcolors.HEADER + "         ##::::::: ##:::..::::: ##:::: ##:: ##:: ##:::..::" + bcolors.ENDC)
-print(bcolors.HEADER + "         ######:::. ######::::: ########::: ##:: ##:::::::" + bcolors.ENDC)
-print(bcolors.HEADER + "         ##...:::::..... ##:::: ##.....:::: ##:: ##:::::::" + bcolors.ENDC)
-print(bcolors.HEADER + "         ##:::::::'##::: ##:::: ##::::::::: ##:: ##::: ##:" + bcolors.ENDC)
-print(bcolors.HEADER + "         ##:::::::. ######::::: ##::::::::'####:. ######::" + bcolors.ENDC)
-print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
-print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
+# (Font: 'nancyj-underlined')
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + "      a88888b.  .88888.  " + bcolors.ENDC)
+print(bcolors.HEADER + "     d8'   `88 d8'   `88 " + bcolors.ENDC)
+print(bcolors.HEADER + "     88        88        " + bcolors.ENDC)
+print(bcolors.HEADER + "     88        88   YP88 " + bcolors.ENDC)
+print(bcolors.HEADER + "     Y8.   .88 Y8.   .88 " + bcolors.ENDC)
+print(bcolors.HEADER + "      Y88888P'  `88888'  " + bcolors.ENDC)
+print(bcolors.HEADER + "     oooooooooooooooooooo" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::" + bcolors.ENDC)
+print(bcolors.HEADER + ":::::::::::::::::::::::::::::\n" + bcolors.ENDC)
+
+# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ########::'######:::::'########::'####::'######::" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ##.....::'##... ##:::: ##.... ##:. ##::'##... ##:" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ##::::::: ##:::..::::: ##:::: ##:: ##:: ##:::..::" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ######:::. ######::::: ########::: ##:: ##:::::::" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ##...:::::..... ##:::: ##.....:::: ##:: ##:::::::" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ##:::::::'##::: ##:::: ##::::::::: ##:: ##::: ##:" + bcolors.ENDC)
+# print(bcolors.HEADER + "         ##:::::::. ######::::: ##::::::::'####:. ######::" + bcolors.ENDC)
+# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + bcolors.ENDC)
+# print(bcolors.HEADER + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" + bcolors.ENDC)
 
 
 def main():
